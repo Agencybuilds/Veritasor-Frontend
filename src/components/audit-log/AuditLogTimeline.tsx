@@ -466,7 +466,7 @@ export default function AuditLogTimeline({
                     if ('count' in item) {
                       const burst = item as BurstGroup
                       return (
-                        <li key={`burst-${index}`} style={burstStyle} role="listitem">
+                        <li key={`burst-${index}`} style={burstStyle}>
                           <span style={badgeStyle} aria-label={`${burst.count} events`}>{burst.count}</span>
                           <span style={eventStyle}>{burst.event}</span>
                           <span style={{ ...detailStyle, marginLeft: 'auto' }}>
@@ -477,7 +477,7 @@ export default function AuditLogTimeline({
                     }
                     const entry = item as AuditLogEntry
                     return (
-                      <li key={entry.id} role="listitem" style={{ listStyle: 'none' }}>
+                      <li key={entry.id} style={{ listStyle: 'none' }}>
                         <button
                           type="button"
                           aria-label={`View details for ${entry.event} at ${formatTime(entry.timestamp)}`}
@@ -521,7 +521,7 @@ export default function AuditLogTimeline({
         {toolbar}
         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
           {filteredEntries.map((entry) => (
-            <li key={entry.id} style={entryStyle} role="listitem">
+            <li key={entry.id} style={entryStyle}>
               <span style={timeStyle}>{formatTime(entry.timestamp)}</span>
               {entry.severity && (
                 <span style={{ flexShrink: 0, marginTop: '0.1rem' }}>

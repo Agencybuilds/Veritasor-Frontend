@@ -199,7 +199,8 @@ export default function BusinessDetailsStep({ data, onNext }: Props) {
               const isChecked = form.businessType === entity.value
 
               return (
-                <label key={entity.value} className="ob-biz-card">
+                // eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps radio input and visible entity label
+                <label key={entity.value} htmlFor={inputId} className="ob-biz-card">
                   <input
                     id={inputId}
                     className="ob-biz-input"
