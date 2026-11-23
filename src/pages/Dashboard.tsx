@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AttestationConfirmModal from '../components/AttestationConfirmModal'
+import { DashboardSkeleton } from '../components/SkeletonLoader'
 import UsageMeter from '../components/UsageMeter'
 import StaleDataChip from '../components/StaleDataChip'
 import { useViewportObserver } from '../hooks/useViewportObserver'
@@ -44,7 +45,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false)
   const [attestError, setAttestError] = useState<string | null>(null)
   const [now, setNow] = useState(() => Date.now())
-  const { trigger, lastUpdated, refresh } = useAttestations()
+  const { status, error: loadError, trigger, lastUpdated, refresh } = useAttestations()
   const { addToast } = useToast()
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Dashboard() {
   const isStale = isAttestationDataStale(lastUpdated, now)
 
   function handleRefresh() {
-    refresh()
+    void refresh()
     setNow(Date.now())
   }
 
@@ -98,7 +99,35 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div className="dashboard-grid">
+      {status === 'loading' ? (
+        <DashboardSkeleton />
+      ) : status === 'error' ? (
+        <div
+          role="alert"
+          style={{
+            padding: '1.5rem',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--danger)',
+            background: 'var(--danger-soft)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div>
+            <strong style={{ display: 'block', marginBottom: '0.25rem' }}>
+              Failed to load dashboard data
+            </strong>
+            <span>{loadError ?? 'An unexpected error occurred.'}</span>
+          </div>
+          <button type="button" className="dashboard-action-btn" onClick={handleRefresh}>
+            Retry
+          </button>
+        </div>
+      ) : (
+        <div className="dashboard-grid">
         <section className="dashboard-section">
           <h2>Key metrics</h2>
           <div className="dashboard-metrics-grid">
@@ -171,6 +200,7 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
+      )}
 
       <AttestationConfirmModal
         open={modalOpen}
