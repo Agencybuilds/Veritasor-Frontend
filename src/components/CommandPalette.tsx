@@ -47,7 +47,7 @@ export const COMMANDS: Command[] = [
     description: 'View and manage revenue proof attestations',
     shortcut: ['G', 'A'],
     category: 'Navigation',
-    pageRoutes: [ROUTES.home, ROUTES.sources, ROUTES.settings],
+    pageRoutes: [ROUTES.dashboard, ROUTES.sources, ROUTES.settings],
   },
   {
     id: 'nav-sources',
@@ -55,7 +55,7 @@ export const COMMANDS: Command[] = [
     description: 'View connected integrations and revenue flow',
     shortcut: ['G', 'S'],
     category: 'Navigation',
-    pageRoutes: [ROUTES.home, ROUTES.attestations, ROUTES.settings],
+    pageRoutes: [ROUTES.dashboard, ROUTES.attestations, ROUTES.settings],
   },
   {
     id: 'action-workspace-jump',
@@ -70,7 +70,7 @@ export const COMMANDS: Command[] = [
     description: 'Integrate Stripe, Shopify, or other platforms',
     shortcut: ['C', 'S'],
     category: 'Actions',
-    pageRoutes: [ROUTES.home, ROUTES.sources],
+    pageRoutes: [ROUTES.dashboard, ROUTES.sources],
   },
   {
     id: 'action-create-attestation',
@@ -78,7 +78,7 @@ export const COMMANDS: Command[] = [
     description: 'Trigger a new revenue proof attestation',
     shortcut: ['N', 'A'],
     category: 'Actions',
-    pageRoutes: [ROUTES.home, ROUTES.attestations],
+    pageRoutes: [ROUTES.dashboard, ROUTES.attestations],
   },
   {
     id: 'action-toggle-theme',
