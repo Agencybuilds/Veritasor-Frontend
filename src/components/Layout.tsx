@@ -13,6 +13,7 @@ import { SessionExpiryWarning } from "./SessionExpiryWarning";
 import { ReauthModal } from "./ReauthModal";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 import { ROUTES } from "../routes";
+import { useOptionalWorkspace } from "../state/workspace";
 
 const configuredSessionDuration = Number(
   import.meta.env.VITE_SESSION_DURATION_MINUTES
@@ -93,6 +94,7 @@ function BillingBannerSlot() {
 function LayoutInner() {
   const navigate = useNavigate();
   const location = useLocation();
+  const workspaceCtx = useOptionalWorkspace();
   const [reauthError, setReauthError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
@@ -239,7 +241,7 @@ function LayoutInner() {
 
         <main id="main-content" ref={mainRef} tabIndex={-1} className="app-main">
           <BillingBannerSlot />
-          <Outlet />
+          <Outlet key={workspaceCtx ? `${workspaceCtx.activeWorkspaceId}-${workspaceCtx.switchVersion}` : undefined} />
         </main>
       </div>
 

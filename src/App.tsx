@@ -5,6 +5,7 @@ import { ToastProvider } from './components/ToastContext'
 import Layout from './components/Layout'
 import { CookieConsentProvider } from './components/CookieConsentContext'
 import { AttestationsProvider } from './state/attestations'
+import { WorkspaceProvider } from './state/workspace'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -75,11 +76,13 @@ export default function App() {
   return (
     <LocaleProvider>
       <ToastProvider>
-        <AttestationsProvider>
-          <CookieConsentProvider>
-            <RouterProvider router={router} future={{ v7_startTransition: true }} />
-          </CookieConsentProvider>
-        </AttestationsProvider>
+        <WorkspaceProvider>
+          <AttestationsProvider>
+            <CookieConsentProvider>
+              <RouterProvider router={router} future={{ v7_startTransition: true }} />
+            </CookieConsentProvider>
+          </AttestationsProvider>
+        </WorkspaceProvider>
       </ToastProvider>
     </LocaleProvider>
   )
