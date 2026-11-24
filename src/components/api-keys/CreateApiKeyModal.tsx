@@ -8,6 +8,77 @@ import {
   getScopeLabels,
   groupTriState,
 } from './scopeDefinitions'
+import { randomBase36, randomHex } from '../../utils/secureRandom'
+
+// ─── Scope definitions ─────────────────────────────────────────────────
+
+interface ScopeItem {
+  id: string
+  label: string
+  description: string
+}
+
+interface ScopeGroup {
+  id: string
+  label: string
+  description: string
+  scopes: ScopeItem[]
+}
+
+const SCOPE_GROUPS: ScopeGroup[] = [
+  {
+    id: 'attestations',
+    label: 'Attestations',
+    description: 'Create and manage revenue attestations',
+    scopes: [
+      { id: 'read:attestations', label: 'Read attestations', description: 'View attestation history and on-chain proof details.' },
+      { id: 'write:attestations', label: 'Write attestations', description: 'Trigger attestations for revenue reports.' },
+    ],
+  },
+  {
+    id: 'sources',
+    label: 'Revenue Sources',
+    description: 'Manage connected revenue data sources',
+    scopes: [
+      { id: 'read:sources', label: 'Read revenue sources', description: 'View connected revenue source metadata.' },
+      { id: 'write:sources', label: 'Write revenue sources', description: 'Connect and configure new revenue sources.' },
+    ],
+  },
+  {
+    id: 'webhooks',
+    label: 'Webhooks',
+    description: 'Manage webhook endpoints and deliveries',
+    scopes: [
+      { id: 'read:webhooks', label: 'Read webhooks', description: 'View webhook configurations and delivery history.' },
+      { id: 'write:webhooks', label: 'Write webhooks', description: 'Create and modify webhook endpoints.' },
+    ],
+  },
+  {
+    id: 'keys',
+    label: 'API Keys',
+    description: 'Manage API key lifecycle',
+    scopes: [
+      { id: 'read:keys', label: 'Read API keys', description: 'View API key metadata (masked values only).' },
+      { id: 'write:keys', label: 'Write API keys', description: 'Create, rotate, and revoke API keys.' },
+    ],
+  },
+]
+
+/** Flat map of every scope id for quick lookup. */
+const ALL_SCOPE_IDS: string[] = SCOPE_GROUPS.flatMap((g) => g.scopes.map((s) => s.id))
+
+type ScopeId = string
+
+// ─── Helpers ───────────────────────────────────────────────────────────
+
+/** Returns the tri-state for a group: 'all' | 'some' | 'none' */
+function groupTriState(group: ScopeGroup, selected: ScopeId[]): 'all' | 'some' | 'none' {
+  const ids = group.scopes.map((s) => s.id)
+  const checked = ids.filter((id) => selected.includes(id)).length
+  if (checked === 0) return 'none'
+  if (checked === ids.length) return 'all'
+  return 'some'
+}
 
 // ─── Component ─────────────────────────────────────────────────────────
 
@@ -131,12 +202,12 @@ export default function CreateApiKeyModal({
     setConfirmOpen(true)
   }
 
-  const keyId = useMemo(() => `key_${Math.random().toString(36).slice(2, 8)}`, [])
+  const keyId = useMemo(() => `key_${randomBase36(6)}`, [])
 
   function mint() {
     // Demo-only: generate a fake secret.
     // Real implementation would come from backend and only reveal it once.
-    const fullKey = `vtsr_live_${Math.random().toString(16).slice(2, 14)}${Math.random().toString(16).slice(2, 10)}_${Math.random().toString(16).slice(2, 6)}`
+    const fullKey = `vtsr_live_${randomHex(6)}${randomHex(4)}_${randomHex(2)}`
     setConfirmOpen(false)
     onMinted(keyId, fullKey)
   }
