@@ -168,6 +168,16 @@ export default function AttestationTrendChart({
     statusFilter === 'all' ? datum.total : datum[statusFilter];
 
   const maxTotal = Math.max(0, ...data.map(getDatumTotal));
+  const maxTotal = Math.max(0, ...data.map((d) => d.total));
+  const summary = data.reduce(
+    (acc, d) => ({
+      verified: acc.verified + d.verified,
+      pending: acc.pending + d.pending,
+      failed: acc.failed + d.failed,
+      total: acc.total + d.total,
+    }),
+    { verified: 0, pending: 0, failed: 0, total: 0 },
+  );
 
   const toggleView = () => setView((v) => (v === 'chart' ? 'table' : 'chart'));
 
@@ -235,6 +245,9 @@ export default function AttestationTrendChart({
           >
             <desc id={descId}>
               Stacked bar chart showing counts of verified, pending, and failed attestations. Select a bar to view filtered attestations.
+              Stacked bar chart showing counts of verified, pending, and failed attestations across {data.length}{' '}
+              {data.length === 1 ? 'period' : 'periods'}. Totals: {summary.verified} verified, {summary.pending} pending,{' '}
+              {summary.failed} failed ({summary.total} total).
             </desc>
 
             <defs>
@@ -296,6 +309,7 @@ export default function AttestationTrendChart({
 
               const href = buildAttestationDrilldownUrl(datum, statusFilter);
               const periodLabel = datum.endDate ? `${datum.date} to ${datum.endDate}` : datum.date;
+              const barDescription = `${datum.date}: verified ${datum.verified}, pending ${datum.pending}, failed ${datum.failed}`;
 
               return (
                 <BarLink
@@ -303,11 +317,15 @@ export default function AttestationTrendChart({
                   href={href}
                   className='attestation-trend-chart__bar'
                   ariaLabel={`${periodLabel}: verified ${datum.verified}, pending ${datum.pending}, failed ${datum.failed}`}
+                  tabIndex={0}
+                  role='button'
+                  aria-label={barDescription}
                   onFocus={() => setActiveIndex(index)}
                   onBlur={() => setActiveIndex(null)}
                   onMouseEnter={() => setActiveIndex(index)}
                   onMouseLeave={() => setActiveIndex(null)}
                 >
+                  <title>{barDescription}</title>
                   {segments}
                   <text x={x + barWidth / 2} y={yTop + 16} textAnchor='middle' className='x-axis-label'>
                     {dateShort(datum.date)}
@@ -325,31 +343,31 @@ export default function AttestationTrendChart({
             )}
           </div>
         </>
-      ) : (
-        <table className='attestation-trend-chart__table'>
-          <caption>Attestation counts by date</caption>
-          <thead>
-            <tr>
-              <th scope='col'>Date</th>
-              <th scope='col'>Verified</th>
-              <th scope='col'>Pending</th>
-              <th scope='col'>Failed</th>
-              <th scope='col'>Total</th>
+      ) : null}
+
+      <table className={view === 'table' ? 'attestation-trend-chart__table' : 'attestation-trend-chart__table sr-only'}>
+        <caption>Attestation counts by date</caption>
+        <thead>
+          <tr>
+            <th scope='col'>Date</th>
+            <th scope='col'>Verified</th>
+            <th scope='col'>Pending</th>
+            <th scope='col'>Failed</th>
+            <th scope='col'>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((datum) => (
+            <tr key={datum.date}>
+              <th scope='row'>{datum.date}</th>
+              <td>{datum.verified}</td>
+              <td>{datum.pending}</td>
+              <td>{datum.failed}</td>
+              <td>{datum.total}</td>
             </tr>
-          </thead>
-          <tbody>
-            {data.map((datum) => (
-              <tr key={datum.date}>
-                <th scope='row'>{datum.date}</th>
-                <td>{datum.verified}</td>
-                <td>{datum.pending}</td>
-                <td>{datum.failed}</td>
-                <td>{datum.total}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }
