@@ -6,6 +6,7 @@ import SubmitButton, { SUBMIT_DEMO_MS } from "../components/SubmitButton";
 import { validatePassword, scorePassword } from "../utils/passwordPolicy";
 import { compose, email as emailValidator, required } from "../utils/validation";
 import { useForm } from "../hooks/useForm";
+import { validatePassword, strengthLevel } from "../utils/passwordPolicy";
 
 const highlights = [
   "Set up your business account in a minute",
@@ -116,7 +117,7 @@ export default function Signup() {
   const showEmailError = (form.hasSubmitted || Boolean(form.touched.email)) && Boolean(emailErrorMessage);
   const showPasswordError = (form.hasSubmitted || Boolean(form.touched.password)) && Boolean(passwordErrorMessage);
 
-  const strength = computeStrength(password);
+  const strength = strengthLevel(password);
   const hasAcknowledgedCurrentTerms = acknowledgedVersion === CURRENT_TOS_VERSION;
 
   useEffect(() => {
