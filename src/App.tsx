@@ -21,6 +21,7 @@ import HelpArticle from './pages/HelpArticle'
 import RevenueSources from './pages/RevenueSources'
 import Settings from './pages/Settings'
 import ConsentPreferences from './pages/ConsentPreferences'
+import VerifyProof from './pages/VerifyProof'
 import {
   ConnectSourceWizard,
   SelectSourceProviderStep,
@@ -39,6 +40,14 @@ export const appRoutes: RouteObject[] = [
   { path: ROUTES.forgotPassword, element: <ForgotPassword /> },
   { path: ROUTES.onboarding, element: <OnboardingWizard /> },
   { path: ROUTES.serverError, element: <ServerError /> },
+const router = createBrowserRouter([
+  { path: '/', element: <Landing /> },
+  { path: '/login', element: <Login /> },
+  { path: '/signup', element: <Signup /> },
+  { path: '/forgot-password', element: <ForgotPassword /> },
+  { path: '/onboarding', element: <OnboardingWizard /> },
+  { path: '/500', element: <ServerError /> },
+  { path: '/proof/:id', element: <VerifyProof /> },
   {
     element: <Layout />,
     children: [
