@@ -5,6 +5,7 @@ import { Suspense, lazy } from 'react'
 import { createBrowserRouter, Outlet, RouterProvider, type RouteObject } from 'react-router-dom'
 import { LocaleProvider } from './i18n/provider'
 import { ToastProvider } from './components/ToastContext'
+import { ErrorListener } from './components/ErrorListener'
 import Layout from './components/Layout'
 import { CookieConsentProvider } from './components/CookieConsentContext'
 import { AttestationsProvider } from './state/attestations'
@@ -207,6 +208,7 @@ export default function App() {
   return (
     <LocaleProvider>
       <ToastProvider>
+        <ErrorListener />
         <WorkspaceProvider>
           <AttestationsProvider>
             <CookieConsentProvider>
