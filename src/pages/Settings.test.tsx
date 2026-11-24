@@ -17,6 +17,12 @@ import { LocaleProvider } from '../i18n/provider'
 import { LOCALE_STORAGE_KEY } from '../i18n/config'
 import { auditLogApi } from '../services/auditLogApi'
 import Settings from '../pages/Settings'
+import {
+  addNotification,
+  buildInitialPrefs,
+  getNotifications,
+  resetNotificationsStore,
+} from '../store/notificationsStore'
 
 function renderSettings(hash = '') {
   const router = createMemoryRouter([
@@ -353,7 +359,28 @@ describe('Settings — panel content', () => {
 
   it('Notifications panel lists notification items', () => {
     renderSettings('#notifications')
-    expect(screen.getByLabelText(/attestation completed/i)).toBeInTheDocument()
+    expect(
+      screen.getByLabelText(/attestation completed — in-app/i),
+    ).toBeInTheDocument()
+  })
+
+  it('disabling an in-app notification category prevents new notifications for that category', () => {
+    resetNotificationsStore([], buildInitialPrefs())
+    renderSettings('#notifications')
+
+    const checkbox = screen.getByLabelText(/attestation completed — in-app/i)
+    expect(checkbox).toBeChecked()
+
+    fireEvent.click(checkbox)
+    expect(checkbox).not.toBeChecked()
+
+    const result = addNotification({
+      category: 'attestation-completed',
+      title: 'Should be suppressed',
+      message: 'Category was disabled in Settings.',
+    })
+    expect(result).toBeNull()
+    expect(getNotifications()).toHaveLength(0)
   })
 
   it('API Keys panel shows a code element', () => {
