@@ -173,6 +173,63 @@ export function useDensityMode(
           onPersistErrorRef.current?.(
             "Could not save density preference. Changes reverted.",
           );
+        });
+    },
+    [storageKey, effectiveWorkspace],
+  );
+
+  // Cross-tab sync: another tab writing this workspace's key updates us.
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.storageArea && event.storageArea !== localStorage) return;
+      if (event.key !== storageKey && event.key !== null) return;
+      let raw: string | null = null;
+      try {
+        raw = localStorage.getItem(storageKey);
+      } catch {
+        raw = null;
+      }
+      setDensityState(raw === "compact" ? "compact" : "comfortable");
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [storageKey]);
+
+  // On mount / workspace change, sync with localStorage and attempt server read
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw === "compact" || raw === "comfortable") {
+        setDensityState(raw);
+      } else {
+        setDensityState("comfortable");
+        localStorage.setItem(storageKey, "comfortable");
+      }
+    } catch {
+      setDensityState("comfortable");
+    }
+
+    // Attempt to fetch server preference to sync across devices
+    fetch(`${API_BASE}?workspace=${encodeURIComponent(effectiveWorkspace)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    })
+      .then(async (res) => {
+        if (!res.ok) return;
+        const data = await res.json();
+        if (
+          data?.density === "compact" ||
+          data?.density === "comfortable"
+        ) {
+          setDensityState(data.density);
+          try {
+            localStorage.setItem(storageKey, data.density);
+          } catch {
+            // ignore
+          }
         }
       })
       .catch((err) => {
