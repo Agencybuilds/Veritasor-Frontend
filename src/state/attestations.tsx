@@ -188,6 +188,9 @@ export function AttestationsProvider({
   initialAttestations?: Attestation[]
   api?: AttestationsApi
 }) {
+  const [list, dispatch] = useReducer(attestationsReducer, initialAttestations)
+  const [lastUpdated, setLastUpdated] = useState(() => new Date().toISOString())
+  const nextId = useRef(1)
   const shouldSeedSynchronously = initialAttestations !== undefined || (!api && isMockMode())
   const seededItems = initialAttestations ?? MOCK_ATTESTATIONS
 
