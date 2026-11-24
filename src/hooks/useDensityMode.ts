@@ -4,7 +4,7 @@ import { useOptionalWorkspace } from "../state/workspace";
 export type DensityMode = "comfortable" | "compact";
 
 const DENSITY_STORAGE_PREFIX = "veritasor_density_";
-const API_BASE = "/v1/preferences/density";
+const API_BASE = "/api/v1/preferences/density";
 
 export interface UseDensityModeOptions {
   /** Called when server persistence fails — use for toast notification */
@@ -15,11 +15,11 @@ export interface UseDensityModeOptions {
  * useDensityMode — manages density preference with optimistic server persistence.
  *
  * 1. Updates localStorage and React state immediately (optimistic).
- * 2. Fires PUT /v1/preferences/density to persist on the server.
+ * 2. Fires PUT /api/v1/preferences/density to persist on the server.
  * 3. On success: no additional UI change needed.
  * 4. On failure: reverts to the previous value and calls onPersistError.
  *
- * Also reads from GET /v1/preferences/density on initial load (after
+ * Also reads from GET /api/v1/preferences/density on initial load (after
  * reading localStorage as the fast default).
  */
 export function useDensityMode(
@@ -63,7 +63,7 @@ export function useDensityMode(
       }
 
       // 2. API persistence (fire-and-forget with rollback)
-      fetch(`${API_BASE}`, {
+      request(API_BASE, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ workspace: effectiveWorkspace, density: mode }),
@@ -137,7 +137,7 @@ export function useDensityMode(
         }
       })
       .catch((err) => {
-        if (err.name === "AbortError") return;
+        if (err instanceof ApiError && err.code === "ABORTED") return;
         // Server unavailable — keep localStorage value
       });
 
