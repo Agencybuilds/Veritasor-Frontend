@@ -26,6 +26,7 @@ import RevenueSources from './pages/RevenueSources'
 import Settings from './pages/Settings'
 import ConsentPreferences from './pages/ConsentPreferences'
 import VerifyProof from './pages/VerifyProof'
+import MotionDemo from './pages/MotionDemo'
 import {
   ConnectSourceWizard,
   SelectSourceProviderStep,
@@ -140,6 +141,7 @@ function RootSuspenseBoundary() {
 }
 
 const appRoutes: RouteObject[] = [
+  { path: ROUTES.motionTokens, element: <MotionDemo /> },
   {
     element: <RootSuspenseBoundary />,
     errorElement: <RouteErrorBoundary />,
