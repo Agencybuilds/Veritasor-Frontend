@@ -290,9 +290,10 @@ export default function ProofShareModal({ isOpen, onClose, attestationId }: Proo
           {/* Generated Link & Copy */}
           {generatedLink && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}>Shareable Link</label>
+              <label htmlFor="proof-share-generated-link" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}>Shareable Link</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input 
+                <input
+                  id="proof-share-generated-link"
                   type="text" 
                   readOnly 
                   value={generatedLink}

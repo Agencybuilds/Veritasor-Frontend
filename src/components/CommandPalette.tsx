@@ -381,6 +381,7 @@ export default function CommandPalette({ isOpen, onClose, onWorkspaceJump }: Com
       role="presentation"
       onClick={handleOverlayClick}
     >
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- dialog handles Escape and focus-trap keyboard navigation */}
       <div
         className="cmd-dialog"
         role="dialog"
@@ -482,6 +483,7 @@ export default function CommandPalette({ isOpen, onClose, onWorkspaceJump }: Com
                     const itemId = `cmd-opt-${cmd.id}${cmd.isRecent ? '-recent' : ''}`
 
                     return (
+                      // eslint-disable-next-line jsx-a11y/click-events-have-key-events -- keyboard selection is handled via aria-activedescendant on the combobox input
                       <li
                         key={itemId}
                         id={itemId}

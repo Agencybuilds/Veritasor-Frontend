@@ -514,6 +514,7 @@ export function SelectSourceProviderStep() {
             const isChecked = data.provider === provider.id
 
             return (
+              // eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps radio input and nested provider card text
               <label key={provider.id} className="wizard-choice-card">
                 <input
                   className="wizard-choice-input"
@@ -995,6 +996,7 @@ export function ConfigureSourceScopeStep() {
               const isChecked = data.syncWindow === windowOption.id
 
               return (
+                // eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps radio input and nested sync window text
                 <label key={windowOption.id} className="wizard-choice-card">
                   <input
                     className="wizard-choice-input"
@@ -1035,6 +1037,7 @@ export function ConfigureSourceScopeStep() {
         </ul>
         <div className="wizard-checkbox-list">
           {optionalScopes.map((scope) => (
+            // eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps checkbox input and nested scope description
             <label key={scope.id} className="wizard-checkbox">
               <input
                 type="checkbox"
@@ -1103,6 +1106,7 @@ export function ConfirmSourceStep() {
         </dl>
       </section>
 
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps checkbox input and nested confirmation text */}
       <label className="wizard-checkbox wizard-checkbox-confirm">
         <input
           type="checkbox"

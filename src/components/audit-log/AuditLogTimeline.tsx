@@ -492,7 +492,7 @@ export default function AuditLogTimeline({
                     if ('count' in item) {
                       const burst = item as BurstGroup
                       return (
-                        <li key={`burst-${index}`} style={burstStyle} role="listitem">
+                        <li key={`burst-${index}`} style={burstStyle}>
                           <span style={badgeStyle} aria-label={`${burst.count} events`}>{burst.count}</span>
                           <span style={eventStyle}>{burst.event}</span>
                           <span style={{ ...detailStyle, marginLeft: 'auto' }}>
@@ -503,7 +503,7 @@ export default function AuditLogTimeline({
                     }
                     const entry = item as AuditLogEntry
                     return (
-                      <li key={entry.id} role="listitem" style={{ listStyle: 'none' }}>
+                      <li key={entry.id} style={{ listStyle: 'none' }}>
                         <button
                           type="button"
                           data-audit-event
@@ -563,6 +563,17 @@ export default function AuditLogTimeline({
                   <span style={{ flexShrink: 0, marginTop: '0.1rem' }}>
                     <SeverityChip severity={entry.severity} />
                   </span>
+            <li key={entry.id} style={entryStyle}>
+              <span style={timeStyle}>{formatTime(entry.timestamp)}</span>
+              {entry.severity && (
+                <span style={{ flexShrink: 0, marginTop: '0.1rem' }}>
+                  <SeverityChip severity={entry.severity} />
+                </span>
+              )}
+              <div>
+                <span style={eventStyle}>{entry.event}</span>
+                {entry.details && (
+                  <p style={{ ...detailStyle, margin: '0.15rem 0 0' }}>{entry.details}</p>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <span style={eventStyle}>{entry.event}</span>

@@ -1235,7 +1235,6 @@ function PaymentMethodsPanel() {
       </div>
 
       <ul
-        role="list"
         style={{
           listStyle: "none",
           padding: 0,
@@ -2074,7 +2073,6 @@ function PlanComparisonTable({
               </span>
             </div>
             <ul
-              role="list"
               style={{
                 listStyle: "none",
                 padding: 0,
@@ -4424,6 +4422,7 @@ function InviteMemberModal({ onClose, onInvite }: InviteMemberModalProps) {
       onClick={onClose}
       style={modalOverlay}
     >
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- stops click propagation from dialog to backdrop */}
       <div
         ref={dialogRef}
         role="dialog"
@@ -4473,12 +4472,14 @@ function InviteMemberModal({ onClose, onInvite }: InviteMemberModalProps) {
 
           {/* Email chip input */}
           <div>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- referenced via aria-labelledby on the chip input group */}
             <label
               id="invite-emails-label"
               style={{ display: "block", fontWeight: 700, marginBottom: "0.4rem", fontSize: "0.9rem" }}
             >
               Email addresses
             </label>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- clicking the chip container focuses the inner text input */}
             <div
               role="group"
               aria-labelledby="invite-emails-label"
@@ -4563,6 +4564,7 @@ function InviteMemberModal({ onClose, onInvite }: InviteMemberModalProps) {
             <legend style={{ fontWeight: 700, marginBottom: "0.5rem", fontSize: "0.9rem" }}>Role</legend>
             <div style={{ display: "grid", gap: "0.45rem" }}>
               {INVITE_ROLE_OPTIONS.map((opt) => (
+                // eslint-disable-next-line jsx-a11y/label-has-associated-control -- label wraps radio input and nested role description
                 <label
                   key={opt.value}
                   style={{
@@ -5801,6 +5803,7 @@ export default function Settings() {
       </div>
 
       {pendingLeave !== null && (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- backdrop click cancels leave; Escape key is handled via keydown listener
         <div
           className="modal-backdrop"
           onClick={cancelLeave}
@@ -5815,6 +5818,7 @@ export default function Settings() {
             padding: "1rem",
           }}
         >
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- stops click propagation from dialog to backdrop */}
           <div
             ref={dialogRef}
             role="alertdialog"

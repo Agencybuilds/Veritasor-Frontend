@@ -895,6 +895,7 @@ export default function Attestations() {
           </p>
         </header>
 
+        {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus -- focus is managed on child role="tab" buttons via roving tabIndex */}
         <div
           role="tablist"
           aria-label="Attestations sections"
